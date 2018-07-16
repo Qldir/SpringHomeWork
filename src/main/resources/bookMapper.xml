@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 상품 정보 SQL -->
+<mapper namespace="com.jwh.shop.dao.BookMapper">
+
+<!-- 상품 리스트 -->
+<select id="bookList" resultType="Book">
+	SELECT
+		bookcode,
+		title,
+		price,
+		quantity
+	FROM book
+</select>
+
+<select id="bookInfo" parameterType="Int" resultType="Book">
+	SELECT
+		bookcode,
+		title,
+		price,
+		quantity
+	FROM book
+	WHERE bookcode=${value}
+</select>
+
+<update id="updateBookInfo" parameterType="Sale">
+	UPDATE book
+	SET quantity = quantity - #{purchasecnt}
+	WHERE bookcode = #{bookcode}
+</update>
+
+
+<!-- 위시리스트 등록 -->
+<insert id="insertWish" parameterType="WishList">
+	INSERT INTO wishlist
+	(
+		userid,
+		bookcode
+	)
+	VALUES
+	(
+		#{userid},
+		#{bookcode}
+	)
+</insert>
+
+<select id="wishList" parameterType="String" resultType="WishList">
+	SELECT
+		userid,
+		bookcode
+	FROM wishlist
+	WHERE userid = '${value}'
+</select>
+
+<delete id="deleteWish" parameterType="WishList">
+	DELETE
+	FROM wishlist
+	WHERE userid = #{userid}
+	AND bookcode = #{bookcode}
+</delete>
+
+</mapper>

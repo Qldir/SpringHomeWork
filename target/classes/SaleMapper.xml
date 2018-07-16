@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 판매 정보 SQL -->
+<mapper namespace="com.jwh.shop.dao.SaleMapper">
+
+<!-- 판매 정보 입력 -->
+<insert id="insertSale" parameterType="Sale">
+	INSERT INTO sale
+	(
+		userid,
+		bookcode,
+		purchasecnt,
+		purchasedate
+	)
+	VALUES
+	(
+		#{userid},
+		#{bookcode},
+		#{purchasecnt},
+		SYSDATE
+	)
+</insert>
+
+<select id="saleList" parameterType="String" resultType="Sale">
+	SELECT
+		userid,
+		bookcode,
+		purchasecnt,
+		(to_char(purchasedate,'YYYY/MM/DD')) purchasedate
+	from
+		sale
+	where
+		userid = '${value}'
+</select>
+
+<select id="saleBest" resultType="Sale">
+	SELECT
+		bookcode,
+		purchasecnt
+	FROM
+	(select bookcode, sum(purchasecnt) purchasecnt from sale group by bookcode ORDER BY purchasecnt DESC)
+	WHERE
+		rownum=1
+</select>
+
+</mapper>
